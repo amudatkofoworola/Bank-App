@@ -4,18 +4,31 @@ namespace ProjectBankApp
 {
     class Transaction
     {
+        private string _firstName;
+        private string _surname;
+        private string _accountNum;
         private DateTime _dateOfTransaction;
-        private string _activity;
-        private double _amount;
-        private double _accountBalance;
+       
 
 
-        public Transaction(string accountNum, DateTime date, string activity, double amount, double accountBalance)
+        public Transaction(string firstname, string surname, string accountNum, DateTime date)
         {
+            _firstName = firstname;
+            _surname = surname;
+            _accountNum = accountNum;
             _dateOfTransaction = date;
-            _activity = " ";
-            _amount = 0;
-            _accountBalance = 0;
+           
+        }
+
+
+        public string GetAccountNum()
+        {
+            return _accountNum;
+        }
+
+        public string GetFullName()
+        {
+            return $"{_firstName} {_surname}";
         }
 
 

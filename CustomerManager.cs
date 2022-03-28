@@ -2,12 +2,30 @@ using System;
 
 namespace ProjectBankApp
 {
+
+    
     class CustomerManager: ICustomerManager
+   
     {
         private Customer[] _customers = new Customer[100];
         private int _noOfCustomers = 0;
         Random rand = new Random();
 
+        CustomerTooYoungException exception = new CustomerTooYoungException();
+
+
+
+
+        public void VerifyAge(DateTime dateOfBirth)
+        {
+            int age = (DateTime.Now.Subtract(dateOfBirth).Days)/365;
+            if (age<16)
+            {
+                throw new CustomerTooYoungException("Customer is too young to open a bank account");
+            }
+            
+            
+        }
 
         private string GenerateAccountNum()
         {

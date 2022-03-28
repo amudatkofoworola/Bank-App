@@ -7,6 +7,8 @@ namespace ProjectBankApp
         ICustomerManager customerManager = new CustomerManager();
         ITransactionManager transactionManager = new TransactionManager();
 
+        CustomerTooYoungException exception = new CustomerTooYoungException();
+
 
         public void ShowMainMenu()
         {
@@ -16,8 +18,9 @@ namespace ProjectBankApp
             Console.WriteLine(" 3. Withdraw funds");
             Console.WriteLine(" 4. Transfer funds");
             Console.WriteLine(" 5. Change pin");
-            Console.WriteLine(" 6. Update profile");
-            Console.WriteLine(" 7. Exit");
+            Console.WriteLine(" 6. Transaction details");
+            Console.WriteLine(" 7. Update profile");
+            Console.WriteLine(" 8. Exit");
 
             Console.WriteLine("Select option: ");
             int option = int.Parse(Console.ReadLine());
@@ -54,6 +57,10 @@ namespace ProjectBankApp
             }
             else if(option==7)
             {
+                ShowTransactionDetails();                
+            }
+            else if(option==8)
+            {
                 ShowMainMenu();
             }
                  
@@ -78,6 +85,21 @@ namespace ProjectBankApp
             Gender gender = (Gender)gendervalue;
             Console.WriteLine("Enter your date of birth");
             DateTime dateOfBirth = Convert.ToDateTime(Console.ReadLine());
+            
+            try
+            {
+                customerManager.VerifyAge(dateOfBirth);
+            }
+            catch( CustomerTooYoungException ex)
+            {
+                 Console.WriteLine(ex.Message);                 
+                 Console.WriteLine("Press any key to continue");
+                 Console.ReadKey();
+                 Console.WriteLine(" ");
+                 ShowMainMenu();
+                
+            }
+
             Console.WriteLine("Enter your address");
             string address = Console.ReadLine();
             Console.WriteLine("Enter your phone number");
@@ -101,8 +123,9 @@ namespace ProjectBankApp
 
             DateTime date = DateTime.Now;
             string activity = "Registration";
+            double amount = 0;
             
-            Transaction newCustomerTransaction =transactionManager.RegisterCustomerTransaction(firstname, surname, pin, newCustomer.GetAccountNum(), date, activity, amount, accountBalance);
+            Transaction newCustomerTransaction =transactionManager.RegisterCustomerTransaction(firstname, surname, newCustomer.GetAccountNum(), date, activity, amount);
 
             ShowMainMenu();
 
@@ -113,13 +136,15 @@ namespace ProjectBankApp
         {
             Console.Write("Enter your account number: ");
             string accountNum = Console.ReadLine();
+            Customer customer = customerManager.GetCustomer(accountNum);
 
-            if(customerManager.GetCustomer(accountNum) == null)
+            if(customer == null)
             {
                 Console.WriteLine("This customer does not exist");
             }
             else
             {
+                
                 Console.WriteLine("How much do you want to deposit?");
                 double amountDeposit = int.Parse(Console.ReadLine());
                 if (amountDeposit<=0)
@@ -128,6 +153,7 @@ namespace ProjectBankApp
                     ShowMainMenu();
                 }
                 customerManager.DepositFunds(accountNum, amountDeposit);
+                transactionManager.AddNewTransactionDetails(accountNum, DateTime.Now, "deposit",amountDeposit,customer.GetAccountBalance());
             }
             ShowMainMenu();
         }
@@ -161,6 +187,7 @@ namespace ProjectBankApp
                      if(response== "yes")
                     {
                         customerManager.WithdrawFunds(accountNum,pin,amountWithdaw);
+                        transactionManager.AddNewTransactionDetails(accountNum, DateTime.Now, "Withdrawal",amountWithdaw,customer.GetAccountBalance());
                     }
                     else
                     {
@@ -222,6 +249,7 @@ namespace ProjectBankApp
                             if(resCharge=="yes")
                             {
                                 customerManager.TransferFunds(accountNum,pin, beneficiaryAccountNum,amountTransfer);
+                                transactionManager.AddNewTransactionDetails(accountNum, DateTime.Now, "Transfer",amountTransfer,customer.GetAccountBalance());
                             }
                             else
                             {
@@ -385,6 +413,24 @@ namespace ProjectBankApp
 
             ShowMainMenu();
                
+        }
+
+
+        public void ShowTransactionDetails()
+        {
+             Console.Write("Enter your account number: ");
+            string accountNum = Console.ReadLine();
+            Transaction customerTransaction = transactionManager.GetCustomerTransaction(accountNum);
+
+            if(customerTransaction == null)
+            {
+                Console.WriteLine("This customer does not exist");
+            }
+            else
+            {
+                transactionManager.ShowCustomerTransactionDetails(accountNum);
+            }
+            ShowMainMenu();
         }
 
 

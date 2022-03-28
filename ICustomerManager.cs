@@ -4,6 +4,7 @@ namespace ProjectBankApp
 {
     interface ICustomerManager
     {
+        public void VerifyAge(DateTime dateOfBirth);
 
         public Customer GetCustomer(string accountNum);
 
