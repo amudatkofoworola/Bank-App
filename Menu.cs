@@ -29,7 +29,7 @@ namespace ProjectBankApp
             {
                 Console.WriteLine("Invalid input");
             }
-                      
+                                  
             else if(option==1)
             {
                 RegisterCustomerMenu();
