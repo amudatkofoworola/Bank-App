@@ -7,14 +7,15 @@ namespace ProjectBankApp
         private Transaction[] _customerTransction = new Transaction[100];
         private int _noOfCustomers = 0;
 
-        private string transactionDetails = " ";
+        
         
 
 
-        public Transaction RegisterCustomerTransaction(string firstname, string surname, string accountNum, DateTime date, string activity, double amount)
+        public Transaction RegisterCustomerTransaction(string firstname, string surname, string accountNum, DateTime date, string activity, double amount, string details)
         {
+            details = "";
             
-            Transaction newCustomerTransaction = new Transaction(firstname, surname, accountNum, date);
+            Transaction newCustomerTransaction = new Transaction(firstname, surname, accountNum, date, details);
             _customerTransction[_noOfCustomers] = newCustomerTransaction;
             _noOfCustomers++;
 
@@ -33,6 +34,20 @@ namespace ProjectBankApp
             return null;
         }
 
+        public string GetCustomerTransactionDetails(string accountNum)
+        {
+            Transaction customerTransaction = GetCustomerTransaction(accountNum);
+            if (customerTransaction == null)
+            {
+                return "This customer does not exist";
+            }
+            else
+            {
+                return customerTransaction.GetDetails();
+            }
+
+        }
+
 
         public void AddNewTransactionDetails(string accountNum, DateTime date, string activity, double amount, double accountBalance)
         {
@@ -43,12 +58,14 @@ namespace ProjectBankApp
             }
             else
             {
-                
-                transactionDetails+= $"{date}       {activity}      {amount}        {accountBalance}.\n";
-                
+                string y = customerTransaction.GetDetails();
                
+                y+= $"{date}       {activity}      {amount}        {accountBalance}.\n";
+                customerTransaction.SetDetails(y);         
+
+                              
             }
-           
+          
 
         }
 
@@ -62,7 +79,7 @@ namespace ProjectBankApp
             else
             {
                 Console.WriteLine($"Dear {customerTransaction.GetFullName()}, find below your transaction details.");
-                Console.WriteLine(transactionDetails);
+                Console.WriteLine(customerTransaction.GetDetails());
             }  
         }
 

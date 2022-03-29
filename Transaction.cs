@@ -8,15 +8,17 @@ namespace ProjectBankApp
         private string _surname;
         private string _accountNum;
         private DateTime _dateOfTransaction;
+        private string _details;
        
 
 
-        public Transaction(string firstname, string surname, string accountNum, DateTime date)
+        public Transaction(string firstname, string surname, string accountNum, DateTime date, string details)
         {
             _firstName = firstname;
             _surname = surname;
             _accountNum = accountNum;
             _dateOfTransaction = date;
+            _details = details;
            
         }
 
@@ -30,6 +32,19 @@ namespace ProjectBankApp
         {
             return $"{_firstName} {_surname}";
         }
+
+
+        public string GetDetails()
+        {
+            return _details;
+        }
+
+        public void SetDetails( string newdetails)
+        {
+            _details = newdetails;
+        }
+
+
 
 
     }

@@ -18,8 +18,8 @@ namespace ProjectBankApp
             Console.WriteLine(" 3. Withdraw funds");
             Console.WriteLine(" 4. Transfer funds");
             Console.WriteLine(" 5. Change pin");
-            Console.WriteLine(" 6. Transaction details");
-            Console.WriteLine(" 7. Update profile");
+            Console.WriteLine(" 6. Update profile");
+            Console.WriteLine(" 7. Transaction details");
             Console.WriteLine(" 8. Exit");
 
             Console.WriteLine("Select option: ");
@@ -124,8 +124,9 @@ namespace ProjectBankApp
             DateTime date = DateTime.Now;
             string activity = "Registration";
             double amount = 0;
+            string details = "";
             
-            Transaction newCustomerTransaction =transactionManager.RegisterCustomerTransaction(firstname, surname, newCustomer.GetAccountNum(), date, activity, amount);
+            Transaction newCustomerTransaction =transactionManager.RegisterCustomerTransaction(firstname, surname, newCustomer.GetAccountNum(), date, activity, amount, details);
 
             ShowMainMenu();
 
