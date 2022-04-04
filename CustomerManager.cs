@@ -1,4 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ProjectBankApp
 {
@@ -7,13 +12,83 @@ namespace ProjectBankApp
     class CustomerManager: ICustomerManager
    
     {
-        private Customer[] _customers = new Customer[100];
-        private int _noOfCustomers = 0;
+        // private Customer[] _customers = new Customer[100];
+        // private int _noOfCustomers = 0;
         Random rand = new Random();
 
         CustomerTooYoungException exception = new CustomerTooYoungException();
+        List<Customer> customers= new List<Customer>();
+        string fileName = "C:\\Users\\BIMBOLA\\Desktop\\New folder\\ProjectBankApp\\Files\\customers.txt";
 
+        public CustomerManager()
+        {
+            
+            ReadCustomerFromFile();
+        }
 
+        public void ReadCustomerFromFile()
+        {
+           try
+           {
+                if(File.Exists(fileName))
+                {
+                    var allCustomers = File.ReadAllLines(fileName);
+                    
+
+                    foreach(var customer in allCustomers)
+                    {
+                        customers.Add(Customer.ToCustomer(customer));
+                    }
+                  
+                }
+                else
+                {
+                    string path = "C:\\Users\\BIMBOLA\\Desktop\\New folder\\ProjectBankApp\\Files";
+                    Directory.CreateDirectory(path);
+                    string newFileName = "customers.txt";
+                    string fullPath = Path.Combine(path, newFileName);
+                    using (File.Create(fullPath)) { }
+                }
+           }
+           catch(Exception e)
+           {
+               Console.WriteLine(e.Message);
+           }
+        }
+
+        public void RefreshFile()
+        {
+            try
+            {
+                using (StreamWriter sr = new StreamWriter(fileName))
+                {
+                    foreach (var customer in customers)
+                    {
+                        sr.WriteLine(customer.ToString());
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public void AddToFile(Customer customer)
+        {
+            try
+            {
+                using (StreamWriter sr = new StreamWriter(fileName, true))
+                {
+                    sr.WriteLine(customer.ToString());
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+                           
 
 
         public void VerifyAge(DateTime dateOfBirth)
@@ -38,11 +113,18 @@ namespace ProjectBankApp
 
         public Customer GetCustomer(string accountNum)
         {
-            for(int y = 0; y<_noOfCustomers; y++)
+            // for(int y = 0; y<_noOfCustomers; y++)
+            // {
+            //     if (_customers[y].GetAccountNum() == accountNum)
+            //     {
+            //         return _customers[y];
+            //     }
+            // }
+            foreach(var customer in customers)
             {
-                if (_customers[y].GetAccountNum() == accountNum)
+                 if (customer.GetAccountNum() == accountNum)
                 {
-                    return _customers[y];
+                    return customer;
                 }
             }
             return null;
@@ -52,13 +134,22 @@ namespace ProjectBankApp
 
         public string GetCustomerPin(string accountNum)
         {
-            for(int y = 0; y<_noOfCustomers; y++)
+             foreach(var customer in customers)
             {
-                if (_customers[y].GetAccountNum() == accountNum)
+                 if (customer.GetAccountNum() == accountNum)
                 {
-                    return _customers[y].GetPin();
+                    return customer.GetPin();
                 }
             }
+                       
+            
+            // for(int y = 0; y<_noOfCustomers; y++)
+            // {
+            //     if (_customers[y].GetAccountNum() == accountNum)
+            //     {
+            //         return _customers[y].GetPin();
+            //     }
+            // }
             return "";
         }
 
@@ -67,8 +158,9 @@ namespace ProjectBankApp
             string accountNum = GenerateAccountNum();
            
             Customer customer = new Customer(firstName, surname, gender, dateOfBirth, address, phoneNo, email, nextOfKin, Pin, accountNum);
-            _customers[_noOfCustomers] = customer;
-            _noOfCustomers++;
+            // _customers[_noOfCustomers] = customer;
+            // _noOfCustomers++;
+            customers.Add(customer);
 
             return customer;
         }
@@ -298,7 +390,7 @@ namespace ProjectBankApp
             else
             {
 
-                customer.SetEmail(newNextOfKin);
+                customer.SetNextOfKIn(newNextOfKin);
                 Console.WriteLine($"Next of Kin details succesfully changed. Your new Next of Kin is {customer.GetNextOfKin()}.");
                 
             }

@@ -1,9 +1,20 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ProjectBankApp
 {
     interface ICustomerManager
     {
+
+        public void ReadCustomerFromFile();
+        public void RefreshFile();
+
+        public void AddToFile(Customer customer);
+
         public void VerifyAge(DateTime dateOfBirth);
 
         public Customer GetCustomer(string accountNum);

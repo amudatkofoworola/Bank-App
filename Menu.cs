@@ -1,4 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ProjectBankApp
 {
@@ -118,6 +123,7 @@ namespace ProjectBankApp
             } while (pin.Length<4 && pin.Length>4 && digits.IndexOf(pin[0])==-1 && digits.IndexOf(pin[1])==-1  && digits.IndexOf(pin[2])==-1 && digits.IndexOf(pin[3])==-1);
             
             Customer newCustomer = customerManager.RegisterCustomer(firstname,surname, gender, dateOfBirth, address, phonenumber, email, nextOfKin, pin);
+            customerManager.AddToFile(newCustomer);
             
             Console.WriteLine($"Dear {newCustomer.GetFullName()}, thank you for registering with BT Bank. Your Account Number is {newCustomer.GetAccountNum()}.");
 
@@ -127,7 +133,7 @@ namespace ProjectBankApp
             string details = "";
             
             Transaction newCustomerTransaction =transactionManager.RegisterCustomerTransaction(firstname, surname, newCustomer.GetAccountNum(), date, activity, amount, details);
-
+            transactionManager.AddToFile(newCustomerTransaction);
             ShowMainMenu();
 
         }
@@ -189,6 +195,7 @@ namespace ProjectBankApp
                     {
                         customerManager.WithdrawFunds(accountNum,pin,amountWithdaw);
                         transactionManager.AddNewTransactionDetails(accountNum, DateTime.Now, "Withdrawal",amountWithdaw,customer.GetAccountBalance());
+                        
                     }
                     else
                     {
@@ -251,6 +258,7 @@ namespace ProjectBankApp
                             {
                                 customerManager.TransferFunds(accountNum,pin, beneficiaryAccountNum,amountTransfer);
                                 transactionManager.AddNewTransactionDetails(accountNum, DateTime.Now, "Transfer",amountTransfer,customer.GetAccountBalance());
+                                transactionManager.AddNewTransactionDetails(beneficiaryAccountNum, DateTime.Now, "Received by Transfer",amountTransfer,beneficiary.GetAccountBalance());
                             }
                             else
                             {
@@ -346,7 +354,7 @@ namespace ProjectBankApp
                     {
                         Console.WriteLine("Enter your new surname");
                         string newSurname = Console.ReadLine();
-                        customerManager.ChangeFirstName(accountNum, newSurname);
+                        customerManager.ChangeSurname(accountNum, newSurname);
                     }
                     Console.WriteLine("Do you want to change your gender?");
                     string resGender = Console.ReadLine().ToLower();
@@ -404,14 +412,14 @@ namespace ProjectBankApp
                         string newNextOfKin = Console.ReadLine();
                         customerManager.ChangeNextOfKin(accountNum, newNextOfKin);
                     }
-                    
+                    customerManager.RefreshFile(); 
+                    Console.WriteLine("Dear customer, you updates are successfully saved");                  
                                                    
                                    
                 }    
-            } 
+            }           
 
-            Console.WriteLine("Dear customer, you updates are successfully saved");
-
+            
             ShowMainMenu();
                
         }

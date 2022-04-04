@@ -1,4 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ProjectBankApp
 {
@@ -22,6 +27,46 @@ namespace ProjectBankApp
 
 
         public Customer(string firstName, string surname, Gender gender, DateTime dateOfBirth, string address, string phoneNo, string email, string nextOfKin, string Pin, string accountNum)
+        {
+            _firstName = firstName;
+            _surname = surname;
+            _gender =gender;
+            _dateOfBirth = dateOfBirth;
+            _address = address;
+            _phoneNo = phoneNo;
+            _email = email;
+            _nextOfKin = nextOfKin;
+            _customerPin = Pin;
+            _accountNum = accountNum;
+            _accountBalance = 0;
+            
+
+        }
+
+        public override string ToString()
+        {
+            return $"{_firstName}\t{_surname}\t{_gender}\t{_dateOfBirth}\t{_address}\t{_phoneNo}\t{_email}\t{_nextOfKin}\t{_customerPin}\t{_accountNum}\t{_accountBalance}";
+        }
+
+        public static Customer ToCustomer(string str)
+        {
+            var customerString = str.Split("\t");
+            string _firstName = customerString[0];
+            string _surname = customerString[1];
+            Gender _gender =Enum.Parse<Gender>(customerString[2]);
+            DateTime _dateOfBirth = Convert.ToDateTime(customerString[3]);
+           string  _address = customerString[4];
+           string  _phoneNo = customerString[5];
+           string  _email = customerString[6];
+           string _nextOfKin = customerString[7];
+           string _customerPin = customerString[8];
+           string _accountNum = customerString[9];
+           int _accountBalance = int.Parse(customerString[10]);
+           Customer customer = new Customer(_firstName, _surname, _gender, _dateOfBirth, _address, _phoneNo, _email, _nextOfKin, _customerPin, _accountNum, _accountBalance);
+           return customer;
+        }
+
+        public Customer(string firstName, string surname, Gender gender, DateTime dateOfBirth, string address, string phoneNo, string email, string nextOfKin, string Pin, string accountNum, int accountBalance)
         {
             _firstName = firstName;
             _surname = surname;
