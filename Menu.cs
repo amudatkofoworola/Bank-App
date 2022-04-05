@@ -120,7 +120,7 @@ namespace ProjectBankApp
             {
                 Console.WriteLine("Enter your preferred four digit pin");
                 pin = Console.ReadLine();
-            } while (pin.Length<4 && pin.Length>4 && digits.IndexOf(pin[0])==-1 && digits.IndexOf(pin[1])==-1  && digits.IndexOf(pin[2])==-1 && digits.IndexOf(pin[3])==-1);
+            } while (pin.Length<4 || pin.Length>4 ||( digits.IndexOf(pin[0])==-1 ||digits.IndexOf(pin[1])==-1  || digits.IndexOf(pin[2])==-1 || digits.IndexOf(pin[3])==-1));
             
             Customer newCustomer = customerManager.RegisterCustomer(firstname,surname, gender, dateOfBirth, address, phonenumber, email, nextOfKin, pin);
             customerManager.AddToFile(newCustomer);
